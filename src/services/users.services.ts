@@ -24,7 +24,10 @@ export const findById = async (id: number) => {
 
     const { password, ...userData } = user
 
-    return userData;
+    return {
+        ...userData,
+        image: userData.image ? `http://${process.env.HOST}:${process.env.PORT}${userData.image}` : null
+    }
 
 }
 

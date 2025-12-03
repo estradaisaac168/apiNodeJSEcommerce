@@ -36,10 +36,10 @@ app.use(errorHandler)
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "localhost";
 
-// app.listen(Number(PORT), "0.0.0.0", () => {
-//     console.log(`Servidor corriendo en http://${HOST}:${PORT}`);
-// });
-
-app.listen(PORT, ()=>{
-    console.log(`Server running port: ${PORT}`);
+app.listen(Number(PORT), "0.0.0.0", () => {
+    console.log(`Servidor corriendo en http://${HOST}:${PORT}`);
 });
+
+// app.listen(PORT, ()=>{
+//     console.log(`Server running port: ${PORT}`);
+// });

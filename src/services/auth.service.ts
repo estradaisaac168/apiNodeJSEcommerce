@@ -46,6 +46,7 @@ export const loginUser = async (data: LoginInput) => {
         "token": `Bearer ${token}`,
         "user": {
             ...userData,
+            image: userData.image ? `http://${process.env.HOST}:${process.env.PORT}${userData.image}` : null,
             roles: formattedRoles
         }
     }
@@ -53,9 +54,15 @@ export const loginUser = async (data: LoginInput) => {
 
 
 export const register = async (data: CreateUserInput) => {
-    const {name, lastname, email, phone, password } = data;
+    const {name, lastname, email, phone, password } = data; //Deconstruccion
 
-    const hashedPassword = await bcrypt.hash(password, 10)
+    const existEmail = await findByEmail(data.email) //Validar que el email no exista en la base de datos
+
+    if(existEmail){
+        throw new AppError("El email ingresado ya existe prueba con otro", 400)
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10) //Hasheo del password
 
     const result = await prisma.$transaction(async (tx) => {
         const user = await tx.user.create({
@@ -112,4 +119,9 @@ export const register = async (data: CreateUserInput) => {
     });
 
     return result;
+}
+
+
+export const findByEmail = async (email: string) => {
+    return await prisma.user.findUnique({where: {email}});
 }
