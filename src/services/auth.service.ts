@@ -4,6 +4,7 @@ import { AppError } from "../utils/AppError.js";
 import type { LoginInput } from "../validators/auth.validator.js";
 import { generateToken } from "../config/jwt.js";
 import type { CreateUserInput } from "../validators/user.validator.js";
+import { log } from "console";
 
 export const loginUser = async (data: LoginInput) => {
     const user = await prisma.user.findUnique({
@@ -21,7 +22,9 @@ export const loginUser = async (data: LoginInput) => {
         throw new AppError("Usuario no encontrado", 404)
     }
 
-    const isPasswordValid = bcrypt.compare(data.password, user.password);
+    const isPasswordValid = await bcrypt.compare(data.password, user.password);
+
+    console.log(isPasswordValid); //------> Por consola me esta retornando true o false estop me sirve para debuguear
 
     if(!isPasswordValid){
         throw new AppError("Password incorrecto", 401);
